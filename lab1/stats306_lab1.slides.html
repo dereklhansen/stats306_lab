@@ -13288,7 +13288,7 @@ a.anchor-link {
 <li>Name?</li>
 <li>Major?</li>
 <li>Year?</li>
-<li>Fun fact</li>
+<li>Fun fact (e.g. what motivated you to take this course?)</li>
 </ul>
 
 </div>
@@ -13298,7 +13298,7 @@ a.anchor-link {
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Getting-set-up-with-R-and-Jupyter">Getting set up with R and Jupyter<a class="anchor-link" href="#Getting-set-up-with-R-and-Jupyter">&#182;</a></h2><ul>
-<li>I'm going to walk through an easy way to get up and running with R and Jupyter</li>
+<li>I'm going to walk through an easy way to get up and running with R and Jupyter without the command line</li>
 <li><a href="https://docs.anaconda.com/anaconda/navigator/tutorials/r-lang/">https://docs.anaconda.com/anaconda/navigator/tutorials/r-lang/</a></li>
 </ul>
 
@@ -13315,7 +13315,7 @@ a.anchor-link {
 </div></section></section><section><section>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[2]:</div>
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-r"><pre><span></span><span class="nf">suppressMessages</span><span class="p">(</span><span class="nf">library</span><span class="p">(</span><span class="n">tidyverse</span><span class="p">))</span>
@@ -13364,7 +13364,7 @@ a.anchor-link {
 </div></section></section><section><section>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[3]:</div>
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-r"><pre><span></span><span class="nf">summary</span><span class="p">(</span><span class="n">diamonds</span><span class="p">)</span>
@@ -13428,7 +13428,7 @@ a.anchor-link {
 </div></section></section><section><section>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[4]:</div>
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-r"><pre><span></span><span class="nf">help</span><span class="p">(</span><span class="n">diamonds</span><span class="p">)</span>
@@ -13441,7 +13441,7 @@ a.anchor-link {
 </div></section></section><section><section>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[17]:</div>
+<div class="prompt input_prompt">In&nbsp;[9]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-r"><pre><span></span><span class="o">?</span><span class="n">diamonds</span>
@@ -13480,7 +13480,7 @@ a.anchor-link {
 </div></section></section><section><section>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[18]:</div>
+<div class="prompt input_prompt">In&nbsp;[10]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-r"><pre><span></span><span class="nf">saveRDS</span><span class="p">(</span><span class="n">diamonds</span><span class="p">,</span> <span class="s">&quot;diamonds.rds&quot;</span><span class="p">)</span>
@@ -13598,7 +13598,7 @@ a.anchor-link {
 </div></section></section><section><section>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[19]:</div>
+<div class="prompt input_prompt">In&nbsp;[11]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-r"><pre><span></span><span class="nf">write_csv</span><span class="p">(</span><span class="n">diamonds</span><span class="p">,</span> <span class="s">&quot;diamonds.csv&quot;</span><span class="p">)</span>
@@ -13666,7 +13666,7 @@ cols(
 </div></section></section><section><section>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[20]:</div>
+<div class="prompt input_prompt">In&nbsp;[12]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-r"><pre><span></span><span class="nf">ggplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">diamonds</span><span class="p">)</span> <span class="o">+</span> 
@@ -15637,7 +15637,7 @@ height=420
 </div></section></section><section><section>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[21]:</div>
+<div class="prompt input_prompt">In&nbsp;[13]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-r"><pre><span></span><span class="nf">ggplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">diamonds</span><span class="p">)</span> <span class="o">+</span> 
@@ -17634,7 +17634,7 @@ height=420
 </div></section></section><section><section>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[22]:</div>
+<div class="prompt input_prompt">In&nbsp;[14]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-r"><pre><span></span><span class="nf">ggplot</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="n">diamonds</span><span class="p">)</span> <span class="o">+</span> 
@@ -21856,7 +21856,7 @@ height=420
 </div></section></section><section><section>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[23]:</div>
+<div class="prompt input_prompt">In&nbsp;[15]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-r"><pre><span></span><span class="nf">ggplot</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="n">diamonds</span><span class="p">)</span> <span class="o">+</span> 
@@ -23790,7 +23790,7 @@ height=420
 </div></section></section><section><section>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[24]:</div>
+<div class="prompt input_prompt">In&nbsp;[16]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-r"><pre><span></span><span class="nf">ggplot</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="n">diamonds</span><span class="p">)</span> <span class="o">+</span> 
@@ -24209,7 +24209,7 @@ You can always google the package documentations as well. For example, can you f
 
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[28]:</div>
+<div class="prompt input_prompt">In&nbsp;[17]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-r"><pre><span></span><span class="n">Below</span> <span class="n">are</span> <span class="n">some</span> <span class="n">imcomplete</span> <span class="n">code</span> <span class="n">snippets</span> <span class="n">to</span> <span class="n">help</span> <span class="n">with</span> <span class="n">the</span> <span class="n">second</span> <span class="n">exercise</span>
@@ -24246,7 +24246,7 @@ Traceback:
 
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[25]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-r"><pre><span></span><span class="c1"># boxplot helps to visualize the variability of a price for each cut</span>
@@ -24257,30 +24257,6 @@ Traceback:
 </pre></div>
 
     </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_text output_error">
-<pre>
-Error in labs(title = label, subtitle = subtitle): argument &#34;label&#34; is missing, with no default
-Traceback:
-
-1. ggtitle()
-2. labs(title = label, subtitle = subtitle)
-3. list2(..., title = title, subtitle = subtitle, caption = caption, 
- .     tag = tag)</pre>
-</div>
-</div>
-
 </div>
 </div>
 
