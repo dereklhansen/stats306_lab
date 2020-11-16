@@ -1,0 +1,351 @@
+---
+title: "Exploratory Data Analysis"
+author: "Derek Hansen"
+date: "4/10/2020"
+output:
+  ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Lifecycle of a data-analysis
+
+## Introduction
+```{r echo = FALSE, out.width = "75%"}
+knitr::include_graphics("diagrams/data-science-model.png")
+```
+
+-  The Applied QR challenges you to complete a data analysis from start to finish.
+-  Starting with a data set and ending with a report involves many different phases of work which utilize different skills.   
+-  Most statistics courses focus only on the "Model" phase.
+
+## Divide-and-conquer
+```{r echo = FALSE, out.width = "75%"}
+knitr::include_graphics("diagrams/data-science.png")
+```
+
+
+-  You can get away with not knowing these formal steps if you have a lot of time.
+-  However, with just 72 hours, you have to **divide-and-conquer**: think of each of these stages as separate components which can be run separately.
+
+## Examples
+
+```{r echo = FALSE, out.width = "75%"}
+knitr::include_graphics("diagrams/data-science.png")
+```
+
+- Don't download or tidy the data each time you do something later in the project
+- Keep different Transform-Visualize-Model cycles in separate code files
+   
+      
+## Wrangle
+```{r echo = FALSE, out.width = "75%"}
+knitr::include_graphics("diagrams/data-science-wrangle.png")
+```
+
+-  **Import:** Download the data you will be using, along with any materials such as data dictionaries.
+    -  Keep it in a folder called ```input/``` which is only read and never modified.
+-  **Tidy:** Manipulate the data so it is tabular and has a coherent structure (c.f. R4DS Ch. 12). 
+
+## Understand
+```{r echo = FALSE, out.width = "75%"}
+knitr::include_graphics("diagrams/data-science.png")
+```
+
+-  **Transform:** Filter, select, and join different datasets in the right form for a particular visual and/or model.
+-  **Visualize:** See relationships in the transformed dataset and decide if it's worth modelling
+- **Model:** Run a statistical model on the data to perform inference and confirmatory analysis
+
+## Communicate
+```{r echo = FALSE, out.width = "75%"}
+knitr::include_graphics("diagrams/data-science-communicate.png")
+```
+
+- **Communicate:** Publish the successful Transform-Visualize-Model cycles
+
+## Introspection
+```{r echo = FALSE, out.width = "75%"}
+knitr::include_graphics("diagrams/data-science.png")
+```
+
+-  Think back to your previous data analysis projects such as in Stats 600 and 601
+    -  Can you identify some of these steps in your process?
+    -  In what ways can your current process be improved based on this cycle?
+-  Keeping these steps in mind is important to keep focused under time pressure.
+-  You can't prepare for the specific dataset, but you can prepare for the process.
+
+
+
+   
+# Exploratory Data Anaylsis
+
+## EDA
+```{r echo = FALSE, out.width = "75%"}
+knitr::include_graphics("diagrams/data-science-explore.png")
+```
+
+- Exploratory Data Analysis (EDA) is the process of generating questions, investigating them, and using what we learn to refine questions or ask new ones
+
+- In the beginning, the goal is to ask a large number of questions and narrow it down as we learn more about our data.
+
+- There isn't a one-size-fits-all solution. EDA requires a bit of creativity and confidence to explore.
+
+## Basic Questions
+-  While every dataset is different, basic questions about data come in two forms (R4DS):
+1.  What type of **variation** occurs within my variables?
+2.  What type of **covariation** occurs between my two variables?
+
+- These guiding principles can keep you on track, but won't be too useful on their own.
+
+- You may not get a dataset where it's even obvious what the covariates are - not every dataset is as easy as NHANES.
+
+- A good example is the 2019 Applied QR...
+
+## 2019 Applied QR Data
+
+-  We'll focus on the data given for the 2019 Applied QR Exam for Austin, TX.
+-  The exam gave a link to download from Box, so we'll use that.
+-  Information given on the prompt:
+    -  "The data for the exam are two administrative datasets related to "dockless" vehicles, i.e. scooters and bicycles that can be rented and dropped off almost anywhere within a city".
+    -  "Each dataset contains a record for each trip, documenting the time that the trip took place, the origin and destination locations, and the duration of the trip. 
+    -  "For privacy reasons, some of the variables have been coarsened, but the details of the coarsening are different for the two cities. See the web sites linked above for more information."
+    
+## Scooter and Bike Data in Austin, TX
+
+- I've already imported and tidied the data; you can find more about this in a supplemental document.
+
+```{r cache=TRUE}
+library(tidyverse)
+library(data.table)
+austin_dockless_dt_clean <- read_rds("temp/austin_dockless_dt_clean.rds")
+```
+
+## Scooter and Bike Data in Austin, TX
+
+```{r cache=TRUE}
+nrow(austin_dockless_dt_clean)
+names(austin_dockless_dt_clean)
+```
+
+## Scooter and Bike Data in Austin, TX
+
+```{r}
+head(austin_dockless_dt_clean)
+```
+
+
+## What were your ideas?
+
+## Some thoughts about this data set
+
+-  Four millon datapoints
+-  The dataset has a time and space component
+    - In what ways can we recast our data to be roughly i.i.d. to suit models from Stats 600 and 601?
+-  Not a lot of "built-in" covariates
+    - Can we cross-reference demographic information using the census variable?
+
+## Transform
+
+```{r cache=TRUE, eval=FALSE, echo=FALSE}
+# Libraries
+library(tidyverse)
+library(data.table)
+library(dtplyr)
+library(tidycensus)
+library(glmnet)
+library(biglm)
+library(stringi)
+
+## Read in data (previously imported)
+austin_dockless_dt_clean <- read_rds("temp/austin_dockless_dt_clean.rds")
+census_tract_df          <- read_rds("temp/census_tract_df.rds")
+census_population_df     <- read_rds("temp/census_population_df.rds")
+texas                    <- read_rds("temp/texas.rds")
+austin                   <- filter(texas, stri_sub(GEOID, 1, 5) == "48453")
+
+
+austin_device_relocation_dt <- austin_dockless_dt_clean
+setkey(austin_device_relocation_dt, device_id, start_time)
+```
+
+
+```{r cache=TRUE, eval=FALSE, echo=FALSE}
+## First, remove any devices that are missing
+austin_device_relocation_dt[, all_duration := all(!is.na(trip_duration)), device_id]
+austin_device_relocation_dt[, all_distance := all(!is.na(trip_distance)), device_id]
+austin_device_relocation_dt[, all_tract_start := all(!is.na(census_tract_start)), device_id]
+austin_device_relocation_dt[, all_tract_end := all(!is.na(census_tract_end)), device_id]
+
+austin_device_relocation_dt <- austin_device_relocation_dt[all_duration & all_distance & all_tract_start & all_tract_end]
+
+austin_device_relocation_dt[, census_tract_start := as.character(census_tract_start)]
+austin_device_relocation_dt[, census_tract_end := as.character(census_tract_end)]
+```
+
+
+```{r eval=FALSE, cache=TRUE, echo=FALSE}
+## Create the variable for
+## 1) "census_tract_prev", which notes the place at which the last ride ended,
+setkey(austin_device_relocation_dt, device_id, start_time)
+austin_device_relocation_dt[, census_tract_prev := {
+  if(.N == 1) {
+    "DECOM"
+  } else {
+    c("DECOM", census_tract_end[c(1:(.N-1))])
+  }
+}, device_id]
+## 2) "census_tract_next", which notes the place at which the next ride started.
+austin_device_relocation_dt[, census_tract_next := {
+  if(.N == 1) {
+    "DECOM"
+  } else {
+    c(census_tract_start[2:.N], "DECOM")
+  }
+}, device_id]
+## 3) "device_moved_prev"
+austin_device_relocation_dt[, device_moved_prev := census_tract_start != census_tract_prev]
+## 4 "device_moved_next"
+austin_device_relocation_dt[, device_moved_next := census_tract_end   != census_tract_next]
+
+## Cycle variables
+## 5) ""cycle"" tracks how many times the device has been moved
+austin_device_relocation_dt[, cycle := cumsum(device_moved_prev), device_id]
+
+## 6) "cum_duration" , "cum_distance" tracks the total duration and distance the device has been used
+austin_device_relocation_dt[, c("cum_duration", "cum_distance") := .(cumsum(trip_duration), cumsum(trip_distance)), device_id]
+
+## 7) "cycle_duration", "cycle_distance" tracks the duration and distance of the current cycle
+austin_device_relocation_dt[, c("cycle_duration", "cycle_distance") := .(cumsum(trip_duration), cumsum(trip_distance)), .(device_id, cycle)]
+
+
+## 9) "cum_trips", "cycle_trips"
+austin_device_relocation_dt[, cum_trips := 1:.N - 1, device_id]
+austin_device_relocation_dt[, cycle_trips := 1:.N - 1, .(device_id, cycle)]
+
+## Save output data.table
+write_rds(austin_device_relocation_dt, "temp/austin_device_relocation_dt.rds")
+```
+
+**Question:** What features of a trip can predict whether a scooter or bike is picked up by the company and moved somewhere else?
+
+-  We can answer this question only after transforming our data. 
+-  A device was "moved" if it had a trip end in one census tract and start in another.
+-  Variables we need to construct:
+    -  Ending location of the previous trip
+    -  Starting location of the next trip
+-  We can then construct indicator variables that tell us if the device was moved.
+
+## Transform
+
+```{r include=FALSE, cache=TRUE}
+library(tidyverse)
+library(tidycensus)
+library(data.table)
+library(stringi)
+austin_device_relocation_dt    <- read_rds("temp/austin_device_relocation_dt.rds")
+```
+
+-  We added many new columns to our dataset.
+```{r cache=TRUE}
+nrow(austin_device_relocation_dt)
+```
+
+## Transform
+
+- We kept devices where the entire trip history was intact; this pares down the dataset significantly.
+
+```{r cache=TRUE}
+names(austin_device_relocation_dt)
+```
+
+## Transform
+
+```{r cache=TRUE}
+head(austin_device_relocation_dt[, .(device_id, census_tract_end, census_tract_next, device_moved_next)])
+```
+
+
+## Transform
+
+
+## Visualize
+
+```{r include=FALSE, cache=TRUE}
+library(tidyverse)
+library(tidycensus)
+library(data.table)
+library(stringi)
+austin_device_relocation_dt    <- read_rds("temp/austin_device_relocation_dt.rds")
+texas                          <- read_rds("temp/texas.rds")
+austin                         <- filter(texas, stri_sub(GEOID, 1, 5) == "48453")
+austin_device_moved_next_count <- austin_device_relocation_dt[device_moved_next == TRUE,.(n_moved = .N), census_tract_end] %>%
+  tbl_df() %>%
+  ungroup() %>%
+  mutate(n_moved_over_total = n_moved / sum(n_moved)) %>%
+  left_join(x = austin, by = c("GEOID" = "census_tract_end"))
+
+austin_device_moved_next_prop <- austin_device_relocation_dt[!is.na(device_moved_next),.(prop_moved = mean(device_moved_next)), census_tract_end] %>%
+  tbl_df() %>%
+  left_join(x = austin, by = c("GEOID" = "census_tract_end"))
+
+## Make plot
+austin_device_moved_next_count_plot <- austin_device_moved_next_count %>%
+  rename(Incoming = n_moved) %>% ggplot() +
+  geom_sf(color = NA, aes(fill = sqrt(Incoming))) +
+  coord_sf(crs = 26911) +
+  ## scale_fill_viridis_c(option = "magma")
+  scale_fill_gradient()
+#austin_device_moved_next_count_plot
+
+# ggsave("fig/austin_device_moved_next_count_plot.pdf", austin_device_moved_next_count_plot, scale=0.75)
+```
+
+
+```{r echo=FALSE}
+austin_device_moved_next_count_plot
+```
+
+-  Here we plot the distribution of where vehicles are sent when they are redeployed; all are deployed downtown.
+
+## Visualize
+
+```{r echo=FALSE}
+austin_device_moved_next_count_plot
+```
+
+-  This contradicts the claims of the scooter companies and city hall that scooters are a "last mile" for those without access to mass transit.
+
+## Model
+-  The models I ended up using had almost no predictive power in determining whether a trip would result in a move.
+-  However, it still made it in to my applied QR.
+-  It also lead to follow up questions which were more interesting.
+
+```{r cache=TRUE, echo=FALSE}
+austin_device_relocation_dt <- read_rds("temp/austin_device_relocation_dt.rds")
+```
+
+## Transform 
+
+**Question:** How many times will a scooter be used before it is picked up?
+
+-  We aggregate the dataset by usage-cycle, which counts each trip that a device took before being picked up.
+    -  ```cycle```: identifier for current usage-cycle
+    -  ```cycle_trips```: number of trips the scooter has taken since being last moved
+    -  ```cycle_distance``` measures how far a device had travelled before being picked up.
+    -  ```cycle_duration``` measures how long a device had been deployed before being picked up.
+
+## Transform
+
+```{r cache=TRUE}
+head(austin_device_relocation_dt[, .(device_id, cycle, cycle_trips, cycle_distance)])
+```
+
+## Model
+
+- From a Poisson regression, with trips the output variable:
+    -  Deploying downtown will result in more uses before the device needs to be retrieved.
+    -  Deploying a device on Friday or Saturday will also result in more uses.
+    -  Deploying a device in the summer will result in more uses.
+
